@@ -73,32 +73,24 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
   const isAuthPage = pathname === '/';
   const isAdmin = initialUser?.uid === 'mgferXC25jOHmMTzpu0p2XqDbKE2';
 
+  // Perform immediate redirect on the server and client if conditions are met
+  if (!isInitialUserLoading && initialUser?.emailVerified && isAuthPage) {
+    router.replace('/home');
+  }
+
   useEffect(() => {
-    if (!auth) return;
+    if (!auth || isInitialUserLoading || isLoadingAppSettings) return;
 
-    // Use onAuthStateChanged for real-time auth updates (like email verification)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (isInitialUserLoading || isLoadingAppSettings) return;
-
       if (appSettings?.maintenanceModeEnabled && !isAdmin) {
         return;
       }
-
-      // If user is now logged in AND their email is verified, redirect to home
+      
       if (user && user.emailVerified) {
         if(pathname === '/') {
           router.replace('/home');
         }
-      }
-      // If user exists but email is not verified, keep them on the auth page
-      else if (user && !user.emailVerified) {
-        if(pathname !== '/') {
-           // Optional: If they navigate away, force them back to login
-           // router.replace('/');
-        }
-      }
-      // If no user, and they are on a protected page, redirect to login
-      else if (!user && !isAuthPage) {
+      } else if (!user && !isAuthPage) {
         router.replace('/');
       }
     });
@@ -125,11 +117,17 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
       return <MaintenancePage />;
   }
 
-  // If user is logged in (and verified, handled by useEffect), show the app.
   if (initialUser && !isAuthPage) {
     return <AppShell>{children}</AppShell>;
   }
+  
+  if (!initialUser && isAuthPage) {
+    return <>{children}</>;
+  }
 
-  // Otherwise, show the children (login page for unauthed, or initial page for authed but unverified)
+  if (initialUser && isAuthPage) {
+    return loadingScreen;
+  }
+
   return <>{children}</>;
 }
