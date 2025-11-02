@@ -77,7 +77,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const currentPageTitle = pageTitles[pathname] ?? '';
   
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full flex flex-col">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-[220px] flex-col border-r bg-white sm:flex lg:w-[280px]">
         <div className="flex h-14 items-center border-b px-6">
           <Link
@@ -130,7 +130,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <div className="flex flex-col sm:pl-[220px] lg:pl-[280px]">
+      <div className="flex flex-col sm:pl-[220px] lg:pl-[280px] flex-1">
         <Header title={currentPageTitle} />
         <main className="flex-1 bg-gray-100/40">{children}</main>
       </div>
