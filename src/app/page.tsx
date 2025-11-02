@@ -387,6 +387,7 @@ export default function AuthPage() {
         </CardHeader>
         <CardContent>
             {!isForgotPassword ? (
+              <div className="flex flex-col">
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="login">Login</TabsTrigger>
@@ -544,6 +545,7 @@ export default function AuthPage() {
                      <AuthProviders />
                 </TabsContent>
                 </Tabs>
+              </div>
             ) : (
                 <EmailOnlyForm
                     title="Forgot Password?"
@@ -559,3 +561,5 @@ export default function AuthPage() {
     </div>
   );
 }
+
+    
