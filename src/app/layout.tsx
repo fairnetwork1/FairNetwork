@@ -73,31 +73,42 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
   const isAuthPage = pathname === '/';
   const isAdmin = initialUser?.uid === 'mgferXC25jOHmMTzpu0p2XqDbKE2';
 
-  // Perform immediate redirect on the server and client if conditions are met
-  if (!isInitialUserLoading && initialUser?.emailVerified && isAuthPage) {
-    router.replace('/home');
-  }
-
   useEffect(() => {
-    if (!auth || isInitialUserLoading || isLoadingAppSettings) return;
+    if (isInitialUserLoading || isLoadingAppSettings) return;
 
+    // Maintenance mode check
+    if (appSettings?.maintenanceModeEnabled && !isAdmin) {
+      // If user is not an admin and maintenance is on, do nothing (MaintenancePage will be shown)
+      return;
+    }
+
+    // Auth state change listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (appSettings?.maintenanceModeEnabled && !isAdmin) {
-        return;
-      }
-      
-      if (user && user.emailVerified) {
-        if(pathname === '/') {
+      const userIsVerified = user && user.emailVerified;
+
+      if (userIsVerified) {
+        if (isAuthPage) {
           router.replace('/home');
         }
-      } else if (!user && !isAuthPage) {
-        router.replace('/');
+      } else {
+        if (!isAuthPage) {
+          router.replace('/');
+        }
       }
     });
 
+    // Initial redirect check after loading is complete
+    if (initialUser && initialUser.emailVerified) {
+        if(isAuthPage) {
+          router.replace('/home');
+        }
+      } else if (!initialUser && !isAuthPage) {
+        router.replace('/');
+      }
+
     return () => unsubscribe();
 
-  }, [isInitialUserLoading, isLoadingAppSettings, auth, appSettings, pathname, router, isAdmin, isAuthPage]);
+  }, [isInitialUserLoading, isLoadingAppSettings, auth, appSettings, pathname, router, isAdmin, isAuthPage, initialUser]);
 
 
   const loadingScreen = (
@@ -129,5 +140,10 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
     return loadingScreen;
   }
 
-  return <>{children}</>;
+  // Fallback for non-verified users on auth page
+  if (initialUser && !initialUser.emailVerified && isAuthPage) {
+      return <>{children}</>;
+  }
+
+  return loadingScreen;
 }
