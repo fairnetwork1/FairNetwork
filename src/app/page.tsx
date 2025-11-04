@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -147,7 +146,7 @@ export default function AuthPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
-  
+
       if (!user) {
         throw new Error("User creation failed, please try again.");
       }
@@ -380,7 +379,7 @@ export default function AuthPage() {
       <Card className="w-full max-w-md shadow-lg">
          <CardHeader className="text-center">
             <div className="mx-auto mb-4">
-              <Logo className="h-12 w-12 text-blue-600" />
+              <img src="/logo512.png" alt="Fair Chain Logo" className="h-12 w-12 mx-auto mb-4" />
             </div>
             <CardTitle className="text-2xl text-black">{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
@@ -561,5 +560,4 @@ export default function AuthPage() {
     </div>
   );
 }
-
     
