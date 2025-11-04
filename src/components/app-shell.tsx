@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -84,7 +83,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             href="/mining"
             className="flex items-center gap-2 font-semibold text-lg text-black"
           >
-            <Logo className="h-7 w-7 text-blue-600" />
+            <img src="/logo512.png" alt="Fair Chain Logo" className="h-7 w-7" />
             <span className="tracking-wide">Fair Chain</span>
           </Link>
         </div>
