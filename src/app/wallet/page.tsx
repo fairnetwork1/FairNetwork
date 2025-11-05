@@ -1,4 +1,3 @@
-
 'use client'
 import React from 'react';
 import { SendDialog } from '@/components/send-dialog';
@@ -31,8 +30,11 @@ const NOTIFICATION_ICONS: { [key: string]: React.ElementType } = {
 
 const UsdtIcon = () => (
     <div className="h-10 w-10 rounded-full bg-[#26A17B] flex items-center justify-center flex-shrink-0">
-        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5">
-            <path d="M9.5 7.5h5v2h-2v7h-2v-7h-3z" fill="#FFF" transform="translate(2.5, 2)" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 339.43 295.27" className="h-6 w-6">
+            <path d="M62.15,1.45l-61.89,130c-5,10.92,2.54,23.59,14.47,23.59h116.43c11.93,0,19.47-12.67,14.47-23.59l-61.89-130C71.69-2.17,67.14-2.17,62.15,1.45Z" fill="#50af95" stroke="#50af95"/>
+            <path d="M191.33,137.7c0-8.34,6.77-15.11,15.11-15.11h0c8.34,0,15.11,6.77,15.11,15.11v79.48c0,8.34-6.77,15.11-15.11,15.11h0c-8.34,0-15.11-6.77-15.11-15.11v-79.48Z" fill="#50af95"/>
+            <path d="M279.19,137.7c0-8.34,6.77-15.11,15.11-15.11h0c8.34,0,15.11,6.77,15.11,15.11v79.48c0,8.34-6.77,15.11-15.11,15.11h0c-8.34,0-15.11-6.77-15.11-15.11v-79.48Z" fill="#50af95"/>
+            <path d="M127.18,155.31c0-8.34,6.77-15.11,15.11-15.11h65.53c8.34,0,15.11,6.77,15.11,15.11v61.87c0,8.34-6.77,15.11-15.11,15.11h-65.53c-8.34,0-15.11-6.77-15.11-15.11v-61.87Z" fill="#50af95"/>
         </svg>
     </div>
 );
