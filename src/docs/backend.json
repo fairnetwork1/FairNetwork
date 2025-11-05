@@ -1,0 +1,388 @@
+
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Fair Chain application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "verifiedBalance": {
+          "type": "number",
+          "description": "User's current balance of verified Fair Chain tokens that can be transferred."
+        },
+        "unverifiedBalance": {
+          "type": "number",
+          "description": "User's current balance of unverified Fair Chain tokens (e.g., from referrals) that cannot be transferred yet."
+        },
+        "usdtBalance": {
+          "type": "number",
+          "description": "User's current balance of USDT tokens."
+        },
+        "fairxBalance": {
+            "type": "number",
+            "description": "User's current balance of FairX points."
+        },
+        "kycStatus": {
+          "type": "string",
+          "enum": ["none", "pending", "approved", "rejected"],
+          "description": "KYC verification status."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "admin"],
+          "description": "The role of the user within the application."
+        },
+        "referrals": {
+          "type": "object",
+          "description": "Object containing counts and rewards from referrals.",
+          "properties": {
+            "verified": { "type": "number" },
+            "unverified": { "type": "number" },
+            "unverifiedRewards": {
+              "type": "object",
+              "properties": {
+                "usdt": { "type": "number" },
+                "fair": { "type": "number" }
+              }
+            },
+            "verifiedRewards": {
+              "type": "object",
+              "properties": {
+                "usdt": { "type": "number" },
+                "fair": { "type": "number" }
+              }
+            }
+          }
+        },
+        "referredBy": {
+            "type": "string",
+            "description": "The UID of the user who referred this user."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "verifiedBalance",
+        "unverifiedBalance",
+        "kycStatus"
+      ]
+    },
+    "KycRequest": {
+      "title": "KycRequest",
+      "type": "object",
+      "description": "Represents a user's KYC verification request.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user submitting the request."
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "idFrontImageUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "idBackImageUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "selfieImageUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "approved", "rejected"]
+        },
+        "submittedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rejectionReason": {
+            "type": "string"
+        }
+      },
+      "required": ["userId", "fullName", "country", "idFrontImageUrl", "idBackImageUrl", "selfieImageUrl", "status", "submittedAt"]
+    },
+    "MiningSession": {
+      "title": "MiningSession",
+      "type": "object",
+      "description": "Represents a user's mining session.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the mining session entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N MiningSession)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the mining session started.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the mining session is scheduled to end.",
+          "format": "date-time"
+        },
+        "claimed": {
+          "type": "boolean",
+          "description": "Indicates if the mining session tokens have been claimed."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "startTime",
+        "endTime",
+        "claimed"
+      ]
+    },
+    "Task": {
+      "title": "Task",
+      "type": "object",
+      "description": "Represents a task that users can complete to earn tokens.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the task entity." },
+        "title": { "type": "string", "description": "Title of the task." },
+        "reward": { "type": "number", "description": "Amount of Fair Chain tokens awarded for completing the task." },
+        "url": { "type": "string", "format": "uri", "description": "URL for the user to complete the task." },
+        "verificationText": { "type": "string", "description": "A specific text or code for verification." }
+      },
+      "required": [ "id", "title", "reward" ]
+    },
+    "UserTask": {
+      "title": "UserTask",
+      "type": "object",
+      "description": "Represents a user's completion of a task, pending verification.",
+      "properties": {
+        "userId": { "type": "string", "description": "Reference to User." },
+        "userEmail": { "type": "string", "description": "Email of the user for display.", "format": "email" },
+        "taskId": { "type": "string", "description": "Reference to Task." },
+        "taskTitle": { "type": "string", "description": "Title of the task for display." },
+        "status": { "type": "string", "enum": ["pending_verification", "completed", "rejected"], "description": "Verification status of the task." },
+        "submittedAt": { "type": "string", "format": "date-time", "description": "Timestamp of submission." }
+      },
+      "required": [ "userId", "userEmail", "taskId", "taskTitle", "status", "submittedAt" ]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "type": "object",
+      "description": "Represents a transaction of Fair Chain tokens between users.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transaction entity."
+        },
+        "senderId": {
+          "type": "string",
+          "description": "Reference to User who sent the tokens."
+        },
+        "receiverId": {
+          "type": "string",
+          "description": "Reference to User who received the tokens."
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of Fair Chain tokens transferred."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp indicating when the transaction occurred.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "senderId",
+        "receiverId",
+        "amount",
+        "timestamp"
+      ]
+    },
+    "Referral": {
+      "title": "Referral",
+      "type": "object",
+      "description": "Represents a referral relationship between users.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the referral entity."
+        },
+        "referrerId": {
+          "type": "string",
+          "description": "Reference to the User who made the referral."
+        },
+        "referredUserId": {
+          "type": "string",
+          "description": "Reference to the User who was referred."
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Indicates whether the referral has been verified."
+        }
+      },
+      "required": [
+        "id",
+        "referrerId",
+        "referredUserId",
+        "verified"
+      ]
+    },
+    "DailyCode": {
+      "title": "DailyCode",
+      "type": "object",
+      "description": "Represents a daily code that users can redeem for a reward.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the daily code entity."
+        },
+        "code": {
+          "type": "string",
+          "description": "The daily code value."
+        },
+        "rewardAmount": {
+          "type": "number",
+          "description": "The amount of tokens awarded for redeeming the code."
+        },
+        "validUntil": {
+          "type": "string",
+          "description": "Timestamp indicating when the code expires.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "rewardAmount",
+        "validUntil"
+      ]
+    },
+    "UserDailyCode": {
+      "title": "UserDailyCode",
+      "type": "object",
+      "description": "Represents a user's redemption of a daily code.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user daily code entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who redeemed the code."
+        },
+        "dailyCodeId": {
+          "type": "string",
+          "description": "Reference to the DailyCode that was redeemed."
+        },
+        "redeemedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the code was redeemed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "dailyCodeId",
+        "redeemedAt"
+      ]
+    },
+    "AppSetting": {
+      "title": "AppSetting",
+      "type": "object",
+      "description": "Stores global application settings.",
+      "properties": {
+        "dailyCheckInReward": { "type": "number", "description": "Reward for daily check-in." },
+        "miningReward": { "type": "number", "description": "Reward for a full mining session." },
+        "transactionFee": { "type": "number", "description": "Fee applied to user-to-user Fair token transactions." },
+        "adminWalletBalance": { "type": "number", "description": "Accumulated transaction fees." },
+        "minSendAmount": { "type": "number", "description": "The minimum amount of Fair a user can send in a single transaction." },
+        "usdtTransactionFee": { "type": "number", "description": "Fee applied to user-to-user USDT transactions." },
+        "minUsdtSendAmount": { "type": "number", "description": "The minimum amount of USDT a user can send in a single transaction." },
+        "maintenanceModeEnabled": { "type": "boolean", "description": "If true, the site is in maintenance mode for non-admins." }
+      }
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "rules": "rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    match /users/{userId} {\n      allow create: if request.auth != null;\n      allow read, update, delete: if request.auth != null && request.auth.uid == userId;\n    }\n\n    match /public/{document=**} {\n      allow read: if true;\n      allow write: if request.auth != null;\n    }\n\n    match /{document=**} {\n      allow read, write: if false;\n    }\n  }\n}",
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Stores user profile information. The document ID is the user's UID. Authenticated users can create their own document, and read/write to it. Admins have full read/write access to all user documents."
+    },
+    "/kyc_requests/{userId}": {
+      "schema": {
+        "$ref": "#/entities/KycRequest"
+      },
+      "description": "Stores KYC (Know Your Customer) requests. The document ID is the user's UID. Users can create, read, and update their own request. Admins have full read/write access to all requests for verification purposes."
+    },
+    "/tasks/{taskId}": {
+      "schema": {
+        "$ref": "#/entities/Task"
+      },
+      "description": "Stores global task definitions available to all users. These are read-only for authenticated users but fully writable by admins."
+    },
+    "/user_tasks/{userTaskId}": {
+      "schema": {
+        "$ref": "#/entities/UserTask"
+      },
+      "description": "Stores user task submissions for verification. The document ID is a composite of userId and taskId. Users can create and read their own submissions. Admins can read all submissions and update their status."
+    },
+    "/transactions/{transactionId}": {
+      "schema": {
+        "$ref": "#/entities/Transaction"
+      },
+      "description": "This collection is deprecated in favor of notifications. Stores transaction records for auditing. Only the backend (or admins) can create transactions. The sender and receiver can read transactions they are a part of."
+    },
+    "/referrals/{referralId}": {
+      "schema": {
+        "$ref": "#/entities/Referral"
+      },
+      "description": "Stores referral relationships. Created by the system when a new user signs up with a referral code. Authenticated users can create them. Read-only for involved users, writable by admins."
+    },
+     "/dailyCodes/{code}": {
+        "schema": {
+            "$ref": "#/entities/DailyCode"
+        },
+        "description": "Stores daily codes that can be redeemed for rewards. Read-only for users, writable by admins."
+    },
+    "/users/{userId}/redeemedCodes/{code}": {
+        "schema": {
+            "$ref": "#/entities/UserDailyCode"
+        },
+        "description": "Tracks which daily codes a user has already redeemed. Path-based ownership: only the user can write to their record."
+    },
+    "/app_settings/main": {
+      "schema": {
+        "$ref": "#/entities/AppSetting"
+      },
+      "description": "A singleton document to store all global app settings. Writable only by admins."
+    }
+  }
+}
+
+    

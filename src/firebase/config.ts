@@ -1,0 +1,12 @@
+
+// This file is for LOCAL DEVELOPMENT only.
+// In production (Vercel), environment variables are used.
+export const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDZbpSEEzufO1x5rzY1ugRISJQ2ol9zTeg",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "studio-4787298910-734d8.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "studio-4787298910-734d8",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "studio-4787298910-734d8.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "335611446911",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:335611446911:web:27fab9cb76370ef74ba14a",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
+};
